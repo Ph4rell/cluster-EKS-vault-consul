@@ -22,3 +22,20 @@ resource "aws_subnet" "subnet" {
         "kubernetes.io/cluster/eks-cluster" = "shared"
     }
 }
+
+resource "aws_route_table" "rt" {
+    vpc_id = aws_vpc.vpc.id
+    route {
+        cidr_block = "0.0.0.0/0"
+        gateway_id = aws_internet_gateway.igw.id
+    }
+    tags = {
+        Name = "${local.prefix}-routetable"
+    }
+}
+
+resource "aws_route_table_association" "rt_association" {
+    count = length(data.aws_availability_zones.zone.names)
+    subnet_id = element(aws_subnet.subnet.*.id, count.index)
+    route_table_id = aws_route_table.rt.id
+}

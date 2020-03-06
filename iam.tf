@@ -2,7 +2,7 @@
 # CLUSTER
 #########
 resource "aws_iam_role" "eks_role" {
-  name = "eks-cluster"
+  name = "${local.prefix}-cluster-role"
 
   assume_role_policy = <<POLICY
 {
@@ -35,7 +35,7 @@ resource "aws_iam_role_policy_attachment" "AmazonEKSServicePolicy" {
 ###########
 
 resource "aws_iam_role" "node_role" {
-  name = "eks-node-group"
+  name = "${local.prefix}-node-role"
 
   assume_role_policy = jsonencode({
     Statement = [{

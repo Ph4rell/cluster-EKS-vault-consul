@@ -1,0 +1,3 @@
+variable "publickey" {
+    type = string
+}

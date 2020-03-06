@@ -19,24 +19,19 @@ resource "aws_eks_cluster" "eks_cluster" {
 resource "aws_security_group" "cluster" {
    name = "${local.prefix}-sg"
    vpc_id = aws_vpc.vpc.id
-  
-   ingress {
-    from_port = 22
-    to_port   = 22
-    protocol  = "tcp"
+   egress {
+     from_port = 0
+     to_port = 0
+     protocol = "-1"
+     cidr_blocks = ["0.0.0.0/0"]
+   }
+}
 
-    cidr_blocks = [
-      "0.0.0.0/0",
-    ]
-  }
-
-  ingress {
-    from_port = 443
-    to_port   = 443
-    protocol  = "tcp"
-
-    cidr_blocks = [
-      "0.0.0.0/0",
-    ]
-  }
+resource "aws_security_group_rule" "ingress_https_to_node" {
+  type = "ingress"
+  from_port = 443
+  to_port = 443
+  protocol = "tcp"
+  security_group_id = aws_security_group.cluster.id
+  source_security_group_id = aws_security_group.node.id
 }

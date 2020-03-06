@@ -30,14 +30,47 @@ resource "aws_eks_node_group" "eks_node" {
 resource "aws_security_group" "node" {
    name = "${local.prefix}-node-sg"
    vpc_id = aws_vpc.vpc.id
-  
-   ingress {
-    from_port = 22
-    to_port   = 22
-    protocol  = "tcp"
 
-    cidr_blocks = [
+   egress {
+       from_port = 0
+       to_port = 0
+       protocol ="-1"
+       cidr_blocks = ["0.0.0.0/0"]
+   }
+}
+resource "aws_security_group_rule" "ingress_ssh_node" {
+  type = "ingress"
+  from_port = 22
+  to_port = 22
+  protocol = "tcp"
+  security_group_id = aws_security_group.node.id
+  cidr_blocks = [
       "0.0.0.0/0",
     ]
-  }
 }
+resource "aws_security_group_rule" "ingress_self_node" {
+  type = "ingress"
+  from_port = 0
+  to_port = 65535
+  protocol = "tcp"
+  security_group_id = aws_security_group.node.id
+  source_security_group_id = aws_security_group.node.id
+}
+resource "aws_security_group_rule" "ingress_cluster_node" {
+    type = "ingress"
+    from_port = 1025
+    to_port = 65535
+    protocol = "tcp"
+    security_group_id = aws_security_group.node.id
+    source_security_group_id = aws_security_group.cluster.id
+}
+
+resource "aws_security_group_rule" "ingress_https_to_master" {
+    type = "ingress"
+    from_port = 443
+    to_port = 443
+    protocol = "tcp"
+    security_group_id = aws_security_group.node.id
+    source_security_group_id = aws_security_group.cluster.id
+}
+

@@ -6,6 +6,7 @@ resource "aws_eks_cluster" "eks_cluster" {
     subnet_ids = aws_subnet.subnet.*.id
     security_group_ids = [aws_security_group.cluster.id]
   }
+  enabled_cluster_log_types = ["api", "authenticator"]
 
   # Ensure that IAM Role permissions are created before and deleted after EKS Cluster handling.
   # Otherwise, EKS will not be able to properly delete EKS managed EC2 infrastructure such as Security Groups.

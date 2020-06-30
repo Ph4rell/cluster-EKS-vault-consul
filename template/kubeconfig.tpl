@@ -23,5 +23,9 @@ users:
       apiVersion: client.authentication.k8s.io/v1alpha1
       command: ${aws_authenticator_command}
       args:
-${aws_authenticator_command_args}
-${aws_authenticator_env_variables}
+        - "token"
+        - "-i"
+        - ${cluster_name}
+      env:
+        - name: AWS_PROFILE
+          value: ${aws_profile}

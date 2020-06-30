@@ -7,5 +7,5 @@ variable "kubeconfig_aws_authenticator_command" {
 }
 
 variable "kubeconfig_aws_authenticator_env_variables" {
-    type = map(string)
+    type = string
 }

@@ -12,7 +12,7 @@ terraform {
 
 provider "aws" {
     region = "eu-west-1"
-    profile = "d2si"
+    profile = var.profile
 }
 
 resource "aws_key_pair" "keypair" {

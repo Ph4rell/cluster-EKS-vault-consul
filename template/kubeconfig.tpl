@@ -1,31 +1,31 @@
 apiVersion: v1
-preferences: {}
-kind: Config
 
 clusters:
 - cluster:
     server: ${endpoint}
     certificate-authority-data: ${cluster_auth_base64}
-  name: ${kubeconfig_name}
+  name: kubernetes
 
 contexts:
 - context:
-    cluster: ${kubeconfig_name}
-    user: ${kubeconfig_name}
-  name: ${kubeconfig_name}
+    cluster: kubernetes
+    user: aws
+  name: aws
 
-current-context: ${kubeconfig_name}
+current-context: aws
+kind: Config
+preferences: {}
 
 users:
-- name: ${kubeconfig_name}
-  user:
-    exec:
-      apiVersion: client.authentication.k8s.io/v1alpha1
-      command: ${aws_authenticator_command}
-      args:
-        - "token"
-        - "-i"
-        - ${cluster_name}
+- name: aws
+  user:
+    exec:
+      apiVersion: client.authentication.k8s.io/v1alpha1
+      command: aws-iam-authenticator
+      args:
+      - token
+      - -i
+      - ${cluster_name}
       env:
-        - name: AWS_PROFILE
-          value: ${aws_profile}
+      - name: AWS_PROFILE
+        value: ${aws_profile}

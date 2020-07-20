@@ -5,7 +5,7 @@ resource "aws_eks_node_group" "eks_node" {
   subnet_ids      = aws_subnet.subnet.*.id
   ami_type        = "AL2_x86_64"
   disk_size       = 20
-  instance_types  = ["t3.micro"]
+  instance_types  = ["t3.small"]
   remote_access {
       ec2_ssh_key = aws_key_pair.keypair.key_name
       source_security_group_ids = [aws_security_group.node.id]
@@ -13,8 +13,8 @@ resource "aws_eks_node_group" "eks_node" {
 
   scaling_config {
     desired_size = 3
-    max_size     = 3
-    min_size     = 3
+    max_size     = 4
+    min_size     = 1
   }
 
   # Ensure that IAM Role permissions are created before and deleted after EKS Node Group handling.

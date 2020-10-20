@@ -1,7 +1,7 @@
 resource "aws_eks_cluster" "eks_cluster" {
   name     = local.prefix
   role_arn = aws_iam_role.eks_role.arn
-  version = 1.17
+  version = 1.18
 
   vpc_config {
     subnet_ids = aws_subnet.subnet.*.id
